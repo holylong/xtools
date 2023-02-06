@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0.9
+Name=xtools
+Comment=Run xls
+Icon=INSTALLPATH/logo.png
+Exec=INSTALLPATH/xls
+Terminal=false
+
