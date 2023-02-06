@@ -2,13 +2,16 @@
 #include <vector>
 
 #ifdef _WIN32
+#include <io.h>
 #else
 #include <unistd.h>
 #endif
 
 #include <fstream>
-
+#include <stdio.h>
 #include <tracer.h>
+
+//D:\works\litechrome\cefbuild\chromium_git\chromium\src\out\Relex_GN_x64\obj\third_party\abseil-cpp\absl\types\bad_variant_access\bad_variant_access.obj
 
 void Log(const std::string &msg)
 {
@@ -18,7 +21,11 @@ void Log(const std::string &msg)
 bool isAccess(const std::string &filepath)
 {
 	SK_TRACE_FUNC()
-	if(!access(filepath.c_str(), F_OK))return true;
+	#ifdef _WIN32
+	if(!_access(filepath.c_str(), 0))return true;
+	#else
+	if(!access(filepath.c_str(), F_OK))return true;		
+	#endif
 	else{
 		// std::cout << "file not exist" << std::endl;
 		return false;
@@ -61,9 +68,20 @@ std::string parseFile(const std::string &filepath)
 	return "";
 }
 
-void Display(const std::string &path, bool flag){
+void Display(const std::string &path, bool flag, bool bshow){
 	// auto f = [](int a){ if(a) return  "is not empty"; else return "is empty";};std::cout << path.c_str() << f(flag) << std::endl;
-	auto f = [&]{ if(flag) return  " is not empty"; else return " is empty";};std::cout << path.c_str() << f() << std::endl;
+	auto f = [&]{ 
+		if(flag) 
+		{
+			if(bshow)
+			std::cout << path.c_str() << " is not empty" << std::endl;
+		}
+		else
+		{
+			std::cout << path.c_str() << " is empty" << std::endl;
+		}
+	};
+	f();
 	// auto f = [=]{ if(flag) return  "is not empty"; else return "is empty";};std::cout << path.c_str() << f() << std::endl;
 }
 
@@ -77,11 +95,17 @@ int main(int argc, char* argv[])
 		help(argv);
 		return -1;
 	}
+	
+	if(argc == 3){
+		for(int i = 1; i < argc; i++)
+			Display(argv[i], isAccess(argv[i]), true);
+		return 0;		
+	}
 
 	std::vector<std::string> arrs;
 	Split(parseFile(argv[1]), arrs, " ");
 	for(auto a : arrs){
-		Display(a, isAccess(a));
+		Display(a, isAccess(a), false);
 	}
 	return 0;
 }
