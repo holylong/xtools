@@ -47,7 +47,7 @@ void Display(const std::string& msg){
 	std::cout << msg.c_str() << std::endl;
 }
 
-int to_number(std::string s)
+int to_number(const std::string &s)
 {
 	if(s == "")return 0;
 	std::stringstream ss;
@@ -94,6 +94,7 @@ int main(int argc, char* argv[])
 								wl._wkKeyBoard = j[s]["keyboard"].dump();
 								wl._wkMouse = j[s]["mouse"].dump();
 							}
+							else wl._wkKeyBoard = j[s].dump();
 							allKeys.push_back(wl);
 						}
 					}
@@ -105,7 +106,7 @@ int main(int argc, char* argv[])
 							if(j[s].contains("keyboard")){
 								allKeys.emplace_back(Weekly(s, j[s]["keyboard"].dump(), j[s]["mouse"].dump()));
 							}else{
-								allKeys.emplace_back(s, "", "");
+								allKeys.emplace_back(s, j[s].dump(), "");
 							}
 						}
 					}
@@ -124,6 +125,7 @@ int main(int argc, char* argv[])
 							wl._wkKeyBoard = j[s]["keyboard"].dump();
 							wl._wkMouse = j[s]["mouse"].dump();
 						}
+						else wl._wkKeyBoard = j[s].dump();
 						allKeys.push_back(wl);
 					}
 				}
