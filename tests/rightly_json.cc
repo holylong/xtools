@@ -47,12 +47,22 @@ void Display(const std::string& msg){
 	std::cout << msg.c_str() << std::endl;
 }
 
+int to_number(std::string s)
+{
+	if(s == "")return 0;
+	std::stringstream ss;
+	ss << s;
+	int ret;
+	ss >> ret;
+	return ret;
+}
+
 void DumpWeekly(const std::vector<Weekly> & allKeys, json &jobj)
 {
 	for(auto ak : allKeys){
 		json ji;
-		ji["keyboard"] = ak._wkKeyBoard;
-		ji["mouse"] = ak._wkMouse; 
+		ji["keyboard"] = to_number(ak._wkKeyBoard);
+		ji["mouse"] = to_number(ak._wkMouse); 
 		jobj[ak._wkDate] = ji;
 	}
 }
